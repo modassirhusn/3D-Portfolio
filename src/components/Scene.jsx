@@ -226,9 +226,11 @@ export default function Scene() {
       <div className="fps-warning-overlay">{renderWarning()}</div>
 
       <nav className="social-icons">
-        <a href="https://www.instagram.com/_ayan.s__"><FaInstagram /></a>
-        <a href="https://github.com/Ayan-1315"><FaGithub /></a>
-        <a href="https://www.linkedin.com/in/ayan-sen-1315abc"><FaLinkedin /></a>
+        <a href="https://www.instagram.com/rockeyrkofficial_/"><FaInstagram /></a>
+        <a href="https://github.com/modassirhusn"><FaGithub /></a>
+        <a href="www.linkedin.com/in/md-modassir-hussain-
+
+"><FaLinkedin /></a>
       </nav>
 
       <div className="hero-content">
