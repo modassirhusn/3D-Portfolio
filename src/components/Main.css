@@ -65,14 +65,14 @@ html, body {
   top: 0;
   z-index: 80;
   background: rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
+  
   border-bottom: 1px solid rgba(255,255,255,0.04);
   transition: all 0.25s ease;
 }
 
 .glass-nav.nav-scrolled {
   background: rgba(0,0,0,0.25);
-  backdrop-filter: blur(14px);
+  
 }
 
 .nav-inner {
@@ -165,7 +165,7 @@ html, body {
 
 .card-3d {
   background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(12px);
+  
   padding: 20px;
   border-radius: 14px;
   transition: 0.35s ease;
@@ -193,7 +193,6 @@ html, body {
   background: rgba(255,255,255,0.04);
   border-radius: 12px;
   padding: 16px;
-  backdrop-filter: blur(10px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.45);
   transition: 0.3s ease;
 }
@@ -243,7 +242,6 @@ html, body {
 
 .edu-card {
   background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(14px);
   border-radius: 14px;
   padding: 24px;
   text-align: left;
@@ -328,7 +326,7 @@ html, body {
   background: rgba(255,255,255,0.04);
   padding: 22px;
   border-radius: 14px;
-  backdrop-filter: blur(14px);
+  
   border: 1px solid rgba(255,255,255,0.05);
   box-shadow: 0 10px 40px rgba(0,0,0,0.45);
   transition: 0.35s ease;
@@ -374,6 +372,38 @@ html, body {
   transition: all 0.9s cubic-bezier(.25, .85, .25, 1);
   filter: blur(8px);
 }
+
+/* Social Icons Wrapper - Fixed Left */
+.social-icons {
+  position: fixed;
+  left: 24px;                 /* distance from left edge */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;     /* vertical */
+  gap: 18px;
+  z-index: 9999;              /* always visible */
+}
+
+/* Individual Icons */
+.social-icons a {
+  font-size: 22px;
+  color: #9fdcff;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+/* Hover Effect - Move RIGHT (correct for left placement) */
+.social-icons a:hover {
+  color: #00eaff;
+  transform: translateX(8px) scale(1.15);
+  text-shadow:
+    0 0 8px rgba(0, 234, 255, 0.8),
+    0 0 16px rgba(0, 234, 255, 0.6);
+}
+
 
 /* when visible → flip & fade */
 .scroll-page.visible {

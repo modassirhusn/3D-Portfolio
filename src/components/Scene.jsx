@@ -228,32 +228,9 @@ export default function Scene() {
       <nav className="social-icons">
         <a href="https://www.instagram.com/rockeyrkofficial_/"><FaInstagram /></a>
         <a href="https://github.com/modassirhusn"><FaGithub /></a>
-        <a href="www.linkedin.com/in/md-modassir-hussain-
-
-"><FaLinkedin /></a>
+        <a href="www.linkedin.com/in/md-modassir-hussain-"><FaLinkedin /></a>
       </nav>
 
-      <div className="hero-content">
-        <h1 className="hero-icon">
-          <button
-            className={`code-icon ${isAnimating ? "disabled" : ""} ${
-              charging ? "charging" : ""
-            } ${powering ? "powering" : ""} ${
-              launched ? "launched" : ""
-            } ${launchPower}`}
-            onMouseDown={startCharge}
-            onMouseUp={releaseAndLaunch}
-            onMouseLeave={cancelCharge}
-            onTouchStart={startCharge}
-            onTouchEnd={releaseAndLaunch}
-            onTouchCancel={cancelCharge}
-          >
-            <span className="bracket bracket-left">&lt;</span>
-            <span className="slash">/</span>
-            <span className="bracket bracket-right">&gt;</span>
-          </button>
-        </h1>
-      </div>
 
       {/* 🚀 INSERTED ROCKET — NO OTHER CHANGES */}
       <div className={`rocket ${launched ? "rocket-launch" : ""}`}>
