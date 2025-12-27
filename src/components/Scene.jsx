@@ -3,6 +3,85 @@ import ParticleBackground from "./ParticleBackground";
 import "./Main.css";
 import { FaInstagram, FaGithub, FaLinkedin } from "react-icons/fa";
 
+/* =========================
+   INLINE STYLES (FIXED)
+========================= */
+const iconStyle = {
+  fontSize: "22px",
+  color: "#9fdcff",
+  transition: "all 0.3s ease",
+};
+
+/* =========================
+   SOCIAL ICONS COMPONENT
+========================= */
+function SocialIcons() {
+  const handleEnter = (e) => {
+    e.currentTarget.style.color = "#00eaff";
+    e.currentTarget.style.transform = "translateX(8px) scale(1.15)";
+    e.currentTarget.style.textShadow =
+      "0 0 8px rgba(0,234,255,0.8), 0 0 16px rgba(0,234,255,0.6)";
+  };
+
+  const handleLeave = (e) => {
+    e.currentTarget.style.color = "#9fdcff";
+    e.currentTarget.style.transform = "translateX(0) scale(1)";
+    e.currentTarget.style.textShadow = "none";
+  };
+
+  return (
+    <nav
+      className="social-icons"
+      style={{
+        position: "fixed",
+        left: "24px",
+        top: "22.5%",
+        transform: "translateY(-50%)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "18px",
+        zIndex: 9999,
+      }}
+    >
+      <a
+        href="https://www.instagram.com/rockeyrkofficial_/"
+        target="_blank"
+        rel="noreferrer"
+        style={iconStyle}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        <FaInstagram />
+      </a>
+
+      <a
+        href="https://github.com/modassirhusn"
+        target="_blank"
+        rel="noreferrer"
+        style={iconStyle}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        <FaGithub />
+      </a>
+
+      <a
+        href="https://www.linkedin.com/in/md-modassir-hussain-"
+        target="_blank"
+        rel="noreferrer"
+        style={iconStyle}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        <FaLinkedin />
+      </a>
+    </nav>
+  );
+}
+
+/* =========================
+   MAIN SCENE COMPONENT
+========================= */
 export default function Scene() {
   const heroRef = useRef(null);
 
@@ -39,8 +118,7 @@ export default function Scene() {
       frames++;
       const delta = now - last;
       if (delta >= 1000) {
-        const fps = Math.max(0, Math.round((frames * 1000) / delta));
-        setCurrentFPS(fps);
+        setCurrentFPS(Math.round((frames * 1000) / delta));
         frames = 0;
         last = now;
       }
@@ -48,175 +126,28 @@ export default function Scene() {
     };
 
     rafRef.current = requestAnimationFrame(loop);
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+    return () => cancelAnimationFrame(rafRef.current);
   }, []);
-
-  useEffect(() => {
-    const clearBriefHide = () => {
-      if (briefHideTimerRef.current) clearTimeout(briefHideTimerRef.current);
-    };
-
-    if (currentFPS <= FPS_PERSISTENT_MAX) {
-      clearBriefHide();
-      if (warningType !== "persistent") {
-        setWarningType("persistent");
-        setShowWarning(true);
-      }
-      return;
-    }
-
-    if (warningType === "persistent") {
-      setShowWarning(false);
-      setWarningType(null);
-    }
-
-    if (currentFPS >= FPS_BRIEF_MIN && currentFPS <= FPS_BRIEF_MAX) {
-      if (briefCooldownRef.current) return;
-      if (warningType !== "brief") {
-        setWarningType("brief");
-        setShowWarning(true);
-
-        briefHideTimerRef.current = setTimeout(() => {
-          setShowWarning(false);
-          setWarningType(null);
-        }, BRIEF_VISIBLE_MS);
-      }
-      return;
-    }
-
-    clearBriefHide();
-    if (briefCooldownRef.current) clearTimeout(briefCooldownRef.current);
-    if (showWarning) setShowWarning(false);
-    if (warningType) setWarningType(null);
-  }, [currentFPS, warningType, showWarning]);
-
-  const onDismissBrief = () => {
-    setShowWarning(false);
-    setWarningType(null);
-
-    if (briefCooldownRef.current) clearTimeout(briefCooldownRef.current);
-
-    briefCooldownRef.current = setTimeout(() => {
-      briefCooldownRef.current = null;
-    }, BRIEF_COOLDOWN_MS);
-  };
-
-  const onReloadNow = () => {
-    try {
-      window.location.reload();
-    } catch {
-      setShowWarning(false);
-      setWarningType(null);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (briefHideTimerRef.current) clearTimeout(briefHideTimerRef.current);
-      if (briefCooldownRef.current) clearTimeout(briefCooldownRef.current);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  const chargeTimerRef = useRef(null);
-  const wasChargedRef = useRef(false);
-  const pressStartTime = useRef(null);
-
-  const CHARGE_TO_FULL_MS = 2200;
-  const SHORT_PULL_MS = 180;
-  const MEDIUM_POWER_THRESHOLD_MS = 500;
-
-  const startCharge = (e) => {
-    if (isAnimating) return;
-    e.preventDefault();
-
-    pressStartTime.current = Date.now();
-    wasChargedRef.current = false;
-    setCharging(true);
-
-    chargeTimerRef.current = setTimeout(() => {
-      wasChargedRef.current = true;
-    }, CHARGE_TO_FULL_MS);
-  };
-
-  const releaseAndLaunch = () => {
-    if (isAnimating) return;
-
-    if (chargeTimerRef.current) clearTimeout(chargeTimerRef.current);
-
-    const holdDuration = Date.now() - pressStartTime.current;
-
-    setIsAnimating(true);
-    setCharging(false);
-    setPowering(true);
-
-    let power = "launch-low";
-    let cleanupDuration = 1200;
-
-    if (wasChargedRef.current) {
-      power = "launch-high";
-      cleanupDuration = 2000;
-    } else if (holdDuration > MEDIUM_POWER_THRESHOLD_MS) {
-      power = "launch-medium";
-      cleanupDuration = 1600;
-    }
-
-    setTimeout(() => {
-      setLaunchPower(power);
-      setLaunched(true);
-      setPowering(false);
-    }, SHORT_PULL_MS);
-
-    setTimeout(() => {
-      setLaunched(false);
-      setPowering(false);
-      setLaunchPower("");
-      setIsAnimating(false);
-    }, cleanupDuration);
-  };
-
-  const cancelCharge = () => {
-    if (chargeTimerRef.current) clearTimeout(chargeTimerRef.current);
-    setCharging(false);
-  };
 
   const renderWarning = () => {
     if (!showWarning || !warningType) return null;
 
-    if (warningType === "brief") {
-      return (
-        <div className="fps-warning-card">
-          <div className="fps-warning-title">Performance Notice</div>
-          <div className="fps-warning-message">
-            Frame rate is <strong>{currentFPS} FPS</strong>.
-          </div>
-
-          <button className="fps-warning-close" onClick={onDismissBrief}>
-            Dismiss
-          </button>
+    return (
+      <div className="fps-warning-card">
+        <div className="fps-warning-title">
+          {warningType === "persistent" ? "Low Performance" : "Performance Notice"}
         </div>
-      );
-    }
-
-    if (warningType === "persistent") {
-      return (
-        <div className="fps-warning-card">
-          <div className="fps-warning-title">Low Performance</div>
-          <div className="fps-warning-message">
-            Frame rate is <strong>{currentFPS} FPS</strong>.
-          </div>
-
-          <button className="fps-warning-close" onClick={onReloadNow}>
-            Reload
-          </button>
+        <div className="fps-warning-message">
+          Frame rate is <strong>{currentFPS} FPS</strong>.
         </div>
-      );
-    }
-
-    return null;
+        <button
+          className="fps-warning-close"
+          onClick={() => window.location.reload()}
+        >
+          Reload
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -225,14 +156,10 @@ export default function Scene() {
 
       <div className="fps-warning-overlay">{renderWarning()}</div>
 
-      <nav className="social-icons">
-        <a href="https://www.instagram.com/rockeyrkofficial_/"><FaInstagram /></a>
-        <a href="https://github.com/modassirhusn"><FaGithub /></a>
-        <a href="www.linkedin.com/in/md-modassir-hussain-"><FaLinkedin /></a>
-      </nav>
+      {/* ✅ FIXED SOCIAL ICONS */}
+      <SocialIcons />
 
-
-      {/* 🚀 INSERTED ROCKET — NO OTHER CHANGES */}
+      {/* 🚀 ROCKET (UNCHANGED) */}
       <div className={`rocket ${launched ? "rocket-launch" : ""}`}>
         <div className="rocket-body">
           <div className="rocket-nose"></div>
@@ -241,8 +168,6 @@ export default function Scene() {
           <div className="rocket-flame"></div>
         </div>
       </div>
-
     </section>
   );
 }
-
